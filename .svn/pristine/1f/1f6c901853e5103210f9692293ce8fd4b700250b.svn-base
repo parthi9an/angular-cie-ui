@@ -1,0 +1,30 @@
+/*
+ * Filters
+ */
+
+angular.module('cie').filter("removeClusterInfo", function() {
+	return function(data) {
+		return data.replace(':', '_');
+	};
+});
+
+angular.module('cie').filter(
+		"eventIcon",
+		function() {
+			return function(name) {
+				var icon = (name.match('KeyBoardEvent')) ? "fa-keyboard-o" 
+						: (name.match('ActionEvent')) ? "fa-cogs"
+						: (name.match('ViewEvent')) ? "fa-eye" 
+						: (name.match('ErrorEvent')) ? "fa-times-circle" 
+						: (name.match('ConfigurationEvent')) ? "fa-wrench" 
+						: (name.match('WindowEvent')) ? "fa-desktop" 
+						: (name.match('EnvironmentEvent')) ? "fa-cubes" 
+						: (name.match('DomainEvent')) ? "fa-globe" 
+						: (name.match('FieldEvent')) ? "fa-tags" 
+						: "fa-square";
+				var event = name.split(';');
+
+				return "<i class='fa " + icon + "'></i> " + event[1];
+
+			};
+		});

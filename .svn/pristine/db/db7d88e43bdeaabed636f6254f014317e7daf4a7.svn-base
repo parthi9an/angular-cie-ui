@@ -1,0 +1,65 @@
+/*
+ * Tool Environment Event Controller 
+ */
+
+function ToolEnvironmentEventCtrl(conf, apiUrl, apiService, $scope, $http,
+		$localStorage, $modal, $compile) {
+
+	var _this = this;
+
+	this.init = function() {
+		
+		var args = ($localStorage.searchFilterArgs != undefined) ? $localStorage.searchFilterArgs : {};
+		_this.getEnvProperties('');
+
+	}
+	
+	$scope.$on('populateSearch', function(event) {
+
+		var args = $localStorage.searchFilterArgs;
+	//	_this.getEnvBreakdown(args);
+	});
+	
+	
+	/*
+	 * Pie charts showing environmental breakdowns per session, user, and site
+	 */
+	
+	this.getEnvBreakdown = function(args) {
+
+		apiService.getWithParams(apiUrl.GET_ENV_BREAKDOWN, args,
+		function(data, status) {
+			_this.selectedProp = data;
+		});
+	}	
+	
+	this.changeProperty = function(item) {
+		var args = {};
+		if($localStorage.searchFilterArgs != undefined) {
+			angular.copy($localStorage.searchFilterArgs, args);
+		}
+		args['property'] = item;
+		_this.getEnvBreakdown(args);
+	}
+	
+	
+	/*
+	 * Get all environment event properties
+	 */
+	this.getEnvProperties = function(args) {
+		apiService.getWithParams(apiUrl.GET_ENV_PROPERTIES, args,
+				function(data, status) {
+					_this.envPropertyList = data.names;
+				});
+	}
+	
+	this.init();
+
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+
+angular.module('cie').controller('ToolEnvironmentEventCtrl', ToolEnvironmentEventCtrl);

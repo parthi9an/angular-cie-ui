@@ -1,0 +1,36 @@
+/**
+ * 
+ */
+
+function ToolEventCtrl(conf, apiUrl, apiService, $scope, $http, $anchorScroll,
+		$location, $localStorage, $modal, $compile) {
+
+	var _this = this;
+
+	this.getCount = function(key) {
+		return (this.summaryData == null || this.summaryData[key] == undefined) ? 0
+				: this.summaryData[key].count;
+	}
+	
+	this.getOverAllSummary = function() {
+		apiService.get(apiUrl.GET_OVERALL_SUMMMARY, function(data, status) {
+			_this.summaryData = data;
+		});
+	}
+	this.getAllEvent = function(args) {
+		apiService.getWithParams(apiUrl.GET_ALL_EVENT, args, function(data,
+				status) {
+			_this.allToolEvents = data;
+		});
+	}
+
+	this.getOverAllSummary();
+	this.getAllEvent('');
+
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+angular.module('cie').controller('ToolEventCtrl', ToolEventCtrl);

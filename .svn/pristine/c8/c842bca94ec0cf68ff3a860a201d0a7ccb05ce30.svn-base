@@ -1,0 +1,64 @@
+/**
+ * MainCtrl - controller Contains severals global data used in diferent view
+ * 
+ */
+function EventSearchCtrl($scope, apiService, apiUrl, $anchorScroll, $location,
+		$localStorage, $modal) {
+
+	var _this = this;
+
+	$scope.selectedSessionId = ($localStorage.searchFilterArgs != undefined ? $localStorage.searchFilterArgs['sessionId']
+			: '');
+
+	this.eventSearch = function() {
+
+		// Create the http post request
+		// the data holds the keywords
+		// The request is a JSON request.
+		var args = {};
+		args['sessionId'] = $scope.selectedSessionId;
+		args['fromDate'] = this.fromDate;
+		args['toDate'] = this.toDate;
+
+		$scope.$emit('populateSearchResults', args);
+
+	};
+
+	this.init = function() {
+		_this.fromDate = new Date();
+
+		_this.toDate = new Date();
+
+		if ($localStorage.searchFilterArgs != undefined) {
+			$scope.selectedSessionId = ($localStorage.searchFilterArgs['sessionId'] != undefined ? $localStorage.searchFilterArgs['sessionId']  : '');
+
+			_this.fromDate = ($localStorage.searchFilterArgs['fromDate'] != undefined ? $localStorage.searchFilterArgs['fromDate']
+					: new Date());
+
+			_this.toDate = ($localStorage.searchFilterArgs['toDate'] != undefined ? $localStorage.searchFilterArgs['toDate']
+					: new Date());
+
+		}
+
+		if ($scope.selectedSessionId != undefined && $scope.selectedSessionId != '') {
+			_this.eventSearch();
+		}
+	}
+
+	this.getSessions = function() {
+		apiService.get(apiUrl.GET_SESSIONS, function(data, status) {
+			_this.eventSessionList = data.names;
+		});
+	}
+
+	this.getSessions();
+
+	this.init();
+
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+angular.module('cie').controller('EventSearchCtrl', EventSearchCtrl)

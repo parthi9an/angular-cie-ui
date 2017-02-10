@@ -1,0 +1,53 @@
+/**
+ * Tool Configuration Event controller
+ * 
+ */
+
+function ToolConfigEventCtrl(conf, apiUrl, apiService, $scope, $http,
+		$localStorage, $modal, $compile) {
+
+	var _this = this;
+	
+	_this.overriddenConfShow = true;
+	
+	this.init = function() {
+
+		var args = ($localStorage.searchFilterArgs != undefined) ? $localStorage.searchFilterArgs
+				: {};
+		_this.getOverriddenConfigCount(args);
+	}
+
+	$scope.$on('populateSearch', function(event, args) {
+
+		$localStorage.searchFilterArgs = args;
+		_this.getOverriddenConfigCount(args);
+	});
+
+	/*
+	 * Get count of overridden Configurations
+	 * Pie chart
+	 */
+
+	this.getOverriddenConfigCount = function(args) {
+		apiService.getWithParams(apiUrl.GET_OVERRIDDEN_CONFIG_COUNT, args,
+				function(data, status) {
+					if (data.name.length == 0) {
+						_this.overriddenConfShow = false;
+					} else {
+						_this.overriddenConfShow = true;
+					}
+					_this.overriddenConfigData = data;
+				});
+	}
+
+	this.init();
+
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+
+angular.module('cie')
+		.controller('ToolConfigEventCtrl', ToolConfigEventCtrl);

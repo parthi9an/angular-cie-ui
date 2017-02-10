@@ -1,0 +1,46 @@
+/**
+ * Tool Keyboard Event controller
+ * 
+ */
+
+function ToolKeyboardEventCtrl(conf, apiUrl, apiService, $scope, $http,
+		$localStorage, $modal, $compile) {
+
+	var _this = this;
+	
+	this.init = function() {
+
+		var args = ($localStorage.searchFilterArgs != undefined) ? $localStorage.searchFilterArgs
+				: {};
+		_this.getCommandCountByInvoked(args);
+	}
+
+	$scope.$on('populateSearch', function(event, args) {
+
+		$localStorage.searchFilterArgs = args;
+		_this.getCommandCountByInvoked(args);
+	});
+
+	/*
+	 * Get counts of how actions are invoked
+	 * Pie chart
+	 */
+
+	this.getCommandCountByInvoked = function(args) {
+		apiService.getWithParams(apiUrl.GET_COMMAND_COUNT_BY_INVOKED, args,
+				function(data, status) {
+					_this.keyboardData = data;
+				});
+	}
+
+	this.init();
+
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+
+angular.module('cie')
+		.controller('ToolKeyboardEventCtrl', ToolKeyboardEventCtrl);

@@ -1,0 +1,245 @@
+<!-- Wrapper-->
+<div id="wrapper" ng-controller="MainCtrl as mCtrl">
+
+	<!-- Navigation -->
+	<div ng-include="'views/common/navigation.html'"></div>
+
+	<!-- Page wraper -->
+	<!-- ng-class with current state name give you the ability to extended customization your view -->
+	<div id="page-wrapper" class="gray-bg {{$state.current.name}}">
+
+		<!-- Page wrapper -->
+		<div ng-include="'views/common/topnavbar.html'"></div>
+
+		<!-- Main view  -->
+		<div class="wrapper wrapper-content"
+			ng-controller="ToolEventCtrl as eCtrl">
+			<div ng-include src="'views/widget/event_search.html'"></div>
+
+			<div class="row">
+				<a href="#/inprogress">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Session</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('session')}}</h1>
+								<small>Total Session</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/tool_window">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Window</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('window')}}</h1>
+								<small>Total</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/tool_action">
+					<div class="col-lg-2">
+						<div class="ibox">
+							<div class="ibox-content">
+								<h5>Action</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('action')}}</h1>
+								<small>Total Action</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/tool_keyb">
+					<div class="col-lg-2">
+						<div class="ibox">
+							<div class="ibox-content">
+								<h5>Keyboard</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('keyboard')}}</h1>
+								<small>Total Keyboard</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/tool_view">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+
+							<div class="ibox-content">
+								<h5>View</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('view')}}</h1>
+								<small>Total View</small>
+							</div>
+						</div>
+					</div>
+				</a>
+
+			</div>
+			<div class="row">
+				<a href="#/inprogress">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Customer</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('site')}}</h1>
+								<small>Total Customer</small>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a href="#/tool_env">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Environment</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('site')}}</h1>
+								<small>Total Environment</small>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a href="#/inprogress">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Error</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('site')}}</h1>
+								<small>Total Error</small>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a href="#/tool_config">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Configuration</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('site')}}</h1>
+								<small>Total Configuration</small>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a href="#/inprogress">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Field Modification</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('site')}}</h1>
+								<small>Total Field </small>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="wrapper wrapper-content animated fadeInRight">
+
+				<div ng-include src="'views/widget/table_event_widget.html'"></div>
+
+			</div>
+
+			<div class="wrapper fadeInRight white-bg">
+				<div class="ibox-content">
+					<div class="row">
+						<div class="col-sm-4">
+							<h2>Frequent Event Patterns</h2>
+						</div>
+						<div class="col-sm-2"></div>
+						<div class="col-sm-2"></div>
+						<div class="col-sm-4">
+							<input id="patternRange">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row animated fadeInRight">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeInRight">
+
+						<div class="ibox-content forum-post-container"
+							id="patternRangeFilterData">
+
+							<div class="media"
+								ng-if="pattern.eIds.length >= mCtrl.minRange && pattern.eIds.length <= mCtrl.maxRange"
+								ng-repeat="pattern in eventPatternData"
+								style="margin: 0; padding: 0; padding-top: 6px; padding-bottom: 6px; cursor: pointer">
+
+								<div class="media-body">
+
+									<ul class="tag-list" style="padding: 0">
+
+										<li ng-repeat="id in pattern.eIds track by $index">
+											<div
+												id="pattern{{$parent.$index+'_'+ $index + '_'+pattern.eIds[$index]|removeClusterInfo}}">
+												<b><a
+													ng-click="eCtrl.toogleEventPattern($parent.$index+'_'+ $index,pattern.eIds[$index])"
+													bind-html-compile="pattern.eNames[$index]|eventIcon"> </a></b>
+												<div class="elements"
+													style="margin-left: 10px; display: none;"></div>
+										</li>
+									</ul>
+									<span class="label label-primary pull-right">{{pattern.association_count}}</span>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row animated fadeInRight">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeInRight"
+						ng-controller="ToolErrorEventCtrl as errCtrl">
+						<div class="ibox-title">
+							<h5>Error Summary</h5>
+						</div>
+						<div class="ibox-content forum-post-container">
+							<div class="media" ng-repeat="exception in exceptionData"
+								style="margin: 0; padding: 0; padding-top: 6px; padding-bottom: 6px; cursor: pointer">
+
+								<div class="media-body" id="excep{{$index}}"
+									ng-init="outIndex=$index">
+									<a class="btn btn-primary btn-xs"
+										ng-click="errCtrl.getFrequentExceptionPattern($index,exception)"><span
+										class="fa fa-angle-right"
+										ng-class="{'fa-angle-down': collapsed, 'fa-angle-right': !collapsed}"></span></a>
+
+									<h4 style="display: inline; padding-left: 4px;"
+										class="media-heading">{{exception.message}}</h4>
+									<span class="label label-danger pull-right">{{exception.count}}</span>
+									<div class="excepElements"
+										style="margin-left: 10px; display: none;">
+										<!-- <div>{{exception.trace}}</div> -->
+										<div ng-repeat="trace in exception.sTrace">{{trace}}</div>
+
+										<div class="media"
+											ng-repeat="ePattern in errCtrl.exceptionPatternData[$index]"
+											style="margin: 0; padding: 0; padding-top: 6px; padding-bottom: 6px; cursor: pointer">
+
+											<div class="media-body">
+
+												<ul class="tag-list" style="padding: 0">
+
+													<li ng-repeat="id in ePattern.eIds track by $index">
+														<div
+															id="pattern{{'e_'+outIndex +'_'+ $parent.$index + '_'+ $index + '_' +ePattern.eIds[$index]|removeClusterInfo}}">
+															<b><a
+																ng-click="eCtrl.toogleEventPattern('e_'+outIndex +'_'+ $parent.$index + '_'+ $index ,ePattern.eIds[$index],$event);"
+																bind-html-compile="ePattern.eNames[$index]|eventIcon">
+															</a></b>
+															<div class="elements"
+																style="margin-left: 10px; display: none;"></div>
+													</li>
+												</ul>
+												<span class="label label-info pull-right">{{ePattern.association_count}}</span>
+
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

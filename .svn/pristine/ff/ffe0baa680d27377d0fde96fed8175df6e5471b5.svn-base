@@ -1,0 +1,79 @@
+/*
+ * Tool Action Event Controller 
+ */
+
+function ToolActionEventCtrl(conf, apiUrl, apiService, $scope, $http,
+		$localStorage, $modal, $compile) {
+
+	var _this = this;
+
+	
+	this.init = function() {
+		
+		var args = ($localStorage.searchFilterArgs != undefined) ? $localStorage.searchFilterArgs : {};
+		_this.getActionNames(args);
+		_this.getCountOfActionEvent(args);
+
+	}
+	
+	/*
+	 * Get count of action type commands
+	 * Pie chart
+	 */
+	
+	this.getCommandCountOfAction = function(args) {
+
+		apiService.getWithParams(apiUrl.GET_COMMAND_COUNT_OF_ACTION, args,
+		function(data, status) {
+			_this.selectedCommand = data;
+			_this.selectedCommand.label = args['name'];
+		});
+	}
+	
+	/*
+	 *  Get count of all action event type
+	 *  Pie chart
+	 */
+	
+	this.getCountOfActionEvent = function(args) {
+		apiService.getWithParams(apiUrl.GET_COUNT_OF_ACTION_KEY, args,
+		function(data, status) {
+			_this.actionData = data;
+		});
+	}
+
+	
+	$scope.$on('populateSearchResults', function(event, args) {
+
+		$localStorage.searchFilterArgs = args;
+		_this.getActionNames(args);
+		_this.getCountOfActionEvent(args);
+	});
+
+	this.changeCommandSelection = function(item) {
+		var args = ($localStorage.searchFilterArgs != undefined) ? $localStorage.searchFilterArgs : {};
+		args['name'] = item;
+		_this.getCommandCountOfAction(args);
+	}
+	
+	
+	/*
+	 * Get action event type names
+	 */
+	this.getActionNames = function(args) {
+		apiService.getWithParams(apiUrl.GET_ACTION_NAMES, args,
+				function(data, status) {
+					_this.actionCommandList = data.names;
+				});
+	}
+	
+	this.init();
+
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+
+angular.module('cie').controller('ToolActionEventCtrl', ToolActionEventCtrl);

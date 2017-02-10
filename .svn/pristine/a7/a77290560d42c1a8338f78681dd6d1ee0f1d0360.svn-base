@@ -1,0 +1,64 @@
+
+<!-- Wrapper-->
+<div id="wrapper" ng-controller="ToolErrorEventCtrl as eCtrl">
+
+	<!-- Navigation -->
+	<div ng-include="'views/common/navigation.html'"></div>
+
+	<!-- Page wraper -->
+	<!-- ng-class with current state name give you the ability to extended customization your view -->
+	<div id="page-wrapper" class="gray-bg {{$state.current.name}}">
+
+		<!-- Page wrapper -->
+		<div ng-include="'views/common/topnavbar.html'"></div>
+
+		<!-- Main view  -->
+		<div class="row wrapper border-bottom white-bg page-heading">
+			<div class="col-lg-10">
+
+				<ol class="breadcrumb" style="padding-top: 5px;">
+					<li><a href="index.html">Home</a></li>
+					<li class="active"><strong>Tool Error Event</strong></li>
+				</ol>
+			</div>
+			<div class="col-lg-2"></div>
+		</div>
+
+		<div class="wrapper wrapper-content animated fadeInRight">
+
+			<div ng-include src="'views/widget/event_search.html'"></div>
+			<div class="row animated fadeInRight">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeInRight">
+						<div class="ibox-title">
+							<h5>Error Summary</h5>
+						</div>
+						<div class="ibox-content forum-post-container">
+							<div class="media" ng-repeat="exception in eCtrl.errorData"
+								style="margin: 0; padding: 0; padding-top: 6px; padding-bottom: 6px; cursor: pointer">
+
+								<div class="media-body" id="excep{{exception.id}}">
+									<a class="btn btn-primary btn-xs" data-nodrag=""><span
+										class="fa fa-angle-right"
+										ng-class="{'fa-angle-down': collapsed, 'fa-angle-right': !collapsed}"></span></a>
+									<h4 style="display: inline; padding-left: 4px;"
+										class="media-heading">{{exception.label}}</h4>
+									<span class="label label-danger pull-right">{{exception.count}}</span>
+									<div class="elements" style="margin-left: 10px; display: none;"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Footer -->
+		<div ng-include="'views/common/footer.html'"></div>
+
+	</div>
+	<!-- End page wrapper-->
+
+</div>
+<!-- End wrapper-->

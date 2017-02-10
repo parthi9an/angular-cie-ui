@@ -1,0 +1,40 @@
+/**
+ * 
+ */
+
+function ToolErrorEventCtrl(conf, apiUrl, apiService, $scope, $http,
+		$localStorage, $modal, $compile) {
+
+	var _this = this;
+	
+	this.errorData = [{"id" : "12:4", "label": "NullPointerException", "count":  6},
+	                  {"id" : "12:5", "label": "ClassNotFoundException", "count":  2}]
+
+	/**
+	 * Pie chart
+	 */
+	
+	$scope.$on('populateSearchResults', function(event, args) {
+
+		$localStorage.searchFilterArgs = args;
+		_this.getExceptionCount(args);
+	});
+
+	
+	this.getExceptionCount = function(args) {
+		apiService.getWithParams(apiUrl.GET_EXCEPTION_COUNT, args,
+				function(data, status) {
+					_this.errorData = data;
+				});
+	}
+	
+	//this.getExceptionCount('');
+	
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+
+angular.module('cie').controller('ToolErrorEventCtrl', ToolErrorEventCtrl);

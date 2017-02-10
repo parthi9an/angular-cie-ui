@@ -1,0 +1,100 @@
+/**
+ * INSPINIA - Responsive Admin Theme
+ * 
+ * Inspinia theme use AngularUI Router to manage routing and views Each view are
+ * defined as state. Initial there are written state for all view in theme.
+ * 
+ */
+function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdleProvider, KeepaliveProvider) {
+
+    // Configure Idle settings
+    IdleProvider.idle(5); // in seconds
+    IdleProvider.timeout(120); // in seconds
+
+    $urlRouterProvider.otherwise("/dashboard");
+
+    $ocLazyLoadProvider.config({
+        // Set to true if you want to see what and when is dynamically loaded
+        debug: false
+    });
+
+    $stateProvider
+        
+    	.state('login', {
+    		url: "/login",
+    		templateUrl: "views/login.html",
+    		 data: { pageTitle: 'Login' },
+    	})
+        .state('dashboard', {
+            url: "/dashboard",
+            templateUrl: "views/dashboard.html",
+            data: { pageTitle: 'Dashboard' },
+           
+        })
+        .state('user', {
+            url: "/user",
+            templateUrl: "views/user.html",
+            data: { pageTitle: 'User' }
+        })
+        .state('domain', {
+            url: "/domain",
+            templateUrl: "views/domain.html",
+        })
+        .state('inprogress', {
+            url: "/inprogress",
+            templateUrl: "views/inprogress.html",
+        })
+        .state('tool_action', {
+            url: "/tool_action",
+            templateUrl: "views/toolevent/action.html",
+        })
+        .state('tool_view', {
+            url: "/tool_view",
+            templateUrl: "views/toolevent/view.html",
+        })
+        .state('tool_keyb', {
+            url: "/tool_keyb",
+            templateUrl: "views/toolevent/keyboard.html",
+        })
+        .state('tool_error', {
+            url: "/tool_error",
+            templateUrl: "views/toolevent/error.html",
+        })
+        .state('tool_window', {
+            url: "/tool_window",
+            templateUrl: "views/toolevent/window.html",
+        })
+        .state('tool_config', {
+            url: "/tool_config",
+            templateUrl: "views/toolevent/config.html",
+        })
+        .state('tool_env', {
+            url: "/tool_env",
+            templateUrl: "views/toolevent/environment.html",
+        })
+        .state('app', {
+            abstract: true,
+            url: "/app",
+            templateUrl: "views/common/content.html",
+        });
+
+}
+angular
+    .module('cie')
+    .config(config)
+    .run(['$rootScope', '$location', '$cookieStore', '$http', '$state', function ($rootScope, $location, $cookieStore, $http, $state) {
+     // keep user logged in after page refresh
+    	$rootScope.$state = $state;
+    	$rootScope.globals = $cookieStore.get('globals') || {};
+    	/*if ($rootScope.globals.currentUser) {
+    		$http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint
+																												// ignore:line
+    	}
+		*/
+    	$rootScope.$on('$locationChangeStart', function (event, next, current) {
+    		// redirect to login page if not logged in
+    		if ($location.path() !== '/login' && !$rootScope.globals.currentUser) {
+    			$location.path('/login');
+    		}
+    	});
+ }]);

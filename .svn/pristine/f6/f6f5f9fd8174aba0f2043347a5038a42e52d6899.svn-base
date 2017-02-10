@@ -1,0 +1,45 @@
+/**
+ * Domain Controller 
+ */
+
+function DomainCtrl(conf, apiUrl, apiService, $scope, $http,
+		$localStorage, $modal, $compile) {
+
+	var _this = this;
+	
+	this.init = function() {
+
+		var args = ($localStorage.searchFilterArgs != undefined) ? $localStorage.searchFilterArgs
+				: {};
+		_this.getCountOfLoginUser(args);	
+		
+	}
+	
+	$scope.$on('populateSearchResults', function(event, args) {
+
+		$localStorage.searchFilterArgs = args;
+		_this.getCountOfLoginUser(args);	
+		
+	});
+
+	/* how many users login via LDAP, composite, or dynamic domains.
+	 * Pie chart
+	 */
+	
+	this.getCountOfLoginUser = function(args) {
+		apiService.getWithParams(apiUrl.GET_COUNT_OF_LOGIN_USER, args,
+				function(data, status) {
+					_this.loginUserData = data;
+				});
+	}
+	
+	this.init();
+	
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+
+angular.module('cie').controller('DomainCtrl', DomainCtrl);

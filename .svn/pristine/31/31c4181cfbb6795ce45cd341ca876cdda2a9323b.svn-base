@@ -1,0 +1,230 @@
+/**
+ * INSPINIA - Responsive Admin Theme
+ *
+ * Inspinia theme use AngularUI Router to manage routing and views
+ * Each view are defined as state.
+ * Initial there are written state for all view in theme.
+ *
+ */
+function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdleProvider, KeepaliveProvider) {
+
+    // Configure Idle settings
+    IdleProvider.idle(5); // in seconds
+    IdleProvider.timeout(120); // in seconds
+
+    $urlRouterProvider.otherwise("/dashboard");
+
+    $ocLazyLoadProvider.config({
+        // Set to true if you want to see what and when is dynamically loaded
+        debug: false
+    });
+
+    $stateProvider
+        
+        .state('dashboard', {
+            url: "/dashboard",
+            templateUrl: "views/dashboard.html",
+            data: { pageTitle: 'Dashboard' },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                        	files: ['js/plugins/sparkline/jquery.sparkline.min.js']
+                        },
+                        {
+                            name: 'angles',
+                            files: ['js/plugins/chartJs/angles.js', 'js/plugins/chartJs/Chart.min.js']
+                        },
+                        {
+                            name: 'angular-peity',
+                            files: ['js/plugins/peity/jquery.peity.min.js', 'js/plugins/peity/angular-peity.js']
+                        },
+                        {
+                            name: 'ui.checkbox',
+                            files: ['js/bootstrap/angular-bootstrap-checkbox.js']
+                        },
+                        {
+                            serie: true,
+                            name: 'angular-flot',
+                            files: [ 'js/plugins/flot/jquery.flot.js', 'js/plugins/flot/jquery.flot.time.js', 'js/plugins/flot/jquery.flot.tooltip.min.js', 'js/plugins/flot/jquery.flot.spline.js', 'js/plugins/flot/jquery.flot.resize.js', 'js/plugins/flot/jquery.flot.pie.js', 'js/plugins/flot/curvedLines.js', 'js/plugins/flot/angular-flot.js', ]
+                        },
+                        {
+                            name: 'ui.checkbox',
+                            files: ['js/bootstrap/angular-bootstrap-checkbox.js']
+                        },
+                        {
+                            serie: true,
+                            files: ['js/plugins/moment/moment.min.js', 'js/plugins/daterangepicker/daterangepicker.js', 'css/plugins/daterangepicker/daterangepicker-bs3.css']
+                        },
+                        {
+                            name: 'daterangepicker',
+                            files: ['js/plugins/daterangepicker/angular-daterangepicker.js']
+                        },
+                        {
+                            insertBefore: '#loadBefore',
+                            name: 'localytics.directives',
+                            files: ['css/plugins/chosen/chosen.css','js/plugins/chosen/chosen.jquery.js','js/plugins/chosen/chosen.js']
+                        },
+                        {
+                            name: 'nouislider',
+                            files: ['css/plugins/nouslider/jquery.nouislider.css','js/plugins/nouslider/jquery.nouislider.min.js','js/plugins/nouslider/angular-nouislider.js']
+                        },
+                        {
+                            name: 'datePicker',
+                            files: ['css/plugins/datapicker/angular-datapicker.css','js/plugins/datapicker/angular-datepicker.js']
+                        },
+                        {
+                            files: ['js/plugins/jasny/jasny-bootstrap.min.js']
+                        },
+                        {
+                            name: 'ngImgCrop',
+                            files: ['js/plugins/ngImgCrop/ng-img-crop.js','css/plugins/ngImgCrop/ng-img-crop.css']
+                        },
+                        {
+                            serie: true,
+                            files: ['js/plugins/moment/moment.min.js', 'js/plugins/daterangepicker/daterangepicker.js', 'css/plugins/daterangepicker/daterangepicker-bs3.css']
+                        }
+                    ]);
+                }
+            }
+        })
+        .state('users', {
+            url: "/users/:userid",
+            templateUrl: "views/users.html",
+            data: { pageTitle: 'Users' },
+            controller: 'users'
+        })
+        .state('session', {
+            url: "/session",
+            templateUrl: "views/session.html",
+        })
+        .state('inprogress', {
+            url: "/inprogress",
+            templateUrl: "views/inprogress.html",
+        })
+        .state('tool_action', {
+            url: "/tool_action",
+            templateUrl: "views/toolevent/action.html",
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'angles',
+                            files: ['js/plugins/chartJs/angles.js']
+                        },
+                        {
+                        	files: ['js/plugins/sparkline/jquery.sparkline.min.js']
+                        },
+                        {
+                            serie: true,
+                            files: ['js/plugins/dataTables/jquery.dataTables.js','css/plugins/dataTables/dataTables.bootstrap.css']
+                        },
+                        {
+                            serie: true,
+                            files: ['js/plugins/dataTables/dataTables.bootstrap.js']
+                        },
+                        {
+                            name: 'datatables',
+                            files: ['js/plugins/dataTables/angular-datatables.min.js']
+                        },
+                        {
+                            name: 'datePicker',
+                            files: ['css/plugins/datapicker/angular-datapicker.css','js/plugins/datapicker/angular-datepicker.js']
+                        }
+                    ]);
+                }
+            }
+        })
+        .state('tool_view', {
+            url: "/tool_view",
+            templateUrl: "views/toolevent/view.html",
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'angles',
+                            files: ['js/plugins/chartJs/angles.js']
+                        },
+                        {
+                        	files: ['js/plugins/sparkline/jquery.sparkline.min.js']
+                        },
+                        {
+                            name: 'datePicker',
+                            files: ['css/plugins/datapicker/angular-datapicker.css','js/plugins/datapicker/angular-datepicker.js']
+                        }
+                    ]);
+                }
+            }
+        }).state('tool_keyb', {
+            url: "/tool_keyb",
+            templateUrl: "views/toolevent/keyboard.html",
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'angles',
+                            files: ['js/plugins/chartJs/angles.js']
+                        },
+                        {
+                        	files: ['js/plugins/sparkline/jquery.sparkline.min.js']
+                        },
+                        {
+                            name: 'datePicker',
+                            files: ['css/plugins/datapicker/angular-datapicker.css','js/plugins/datapicker/angular-datepicker.js']
+                        }
+                    ]);
+                }
+            }
+        }).state('tool_error', {
+            url: "/tool_error",
+            templateUrl: "views/toolevent/error.html",
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'angles',
+                            files: ['js/plugins/chartJs/angles.js']
+                        },
+                        {
+                        	files: ['js/plugins/sparkline/jquery.sparkline.min.js']
+                        },
+                        {
+                            name: 'datePicker',
+                            files: ['css/plugins/datapicker/angular-datapicker.css','js/plugins/datapicker/angular-datepicker.js']
+                        }
+                    ]);
+                }
+            }
+        }).state('tool_window', {
+            url: "/tool_window",
+            templateUrl: "views/toolevent/window.html",
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'angles',
+                            files: ['js/plugins/chartJs/angles.js']
+                        },
+                        {
+                        	files: ['js/plugins/sparkline/jquery.sparkline.min.js']
+                        },
+                        {
+                            name: 'datePicker',
+                            files: ['css/plugins/datapicker/angular-datapicker.css','js/plugins/datapicker/angular-datepicker.js']
+                        }
+                    ]);
+                }
+            }
+        }).state('app', {
+            abstract: true,
+            url: "/app",
+            templateUrl: "views/common/content.html",
+        });
+
+}
+angular
+    .module('cie')
+    .config(config)
+    .run(function($rootScope, $state) {
+        $rootScope.$state = $state;
+    });

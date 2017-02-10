@@ -1,0 +1,83 @@
+/**
+ * 
+ */
+
+function ToolActionEventCtrl(conf, apiUrl, apiService, $scope, $http,
+		$localStorage, $modal, $compile) {
+
+	var _this = this;
+
+	
+	
+	/*this.actionCommandCountList = [ {
+		name : "common.action.delete",
+		labels : [ "keyboard", "toolbar", "menu", "button", "mouse-click" ],
+		data : [ 25, 45, 18, 29, 19 ]
+	}, {
+		labels : [ "keyboard", "toolbar", "menu", "button", "mouse-click" ],
+		data : [ 65, 59, 80, 81, 56 ],
+		name : "common.action.insert"
+	}, {
+		labels : [ "keyboard", "toolbar", "menu", "button", "mouse-click" ],
+		name : "common.action.replace",
+		data : [ 21, 18, 8, 33, 12 ]
+	}, {
+		labels : [ "keyboard", "toolbar", "menu", "button", "mouse-click" ],
+		name : "common.action.move",
+		data : [ 72, 59, 19, 44, 28 ]
+	} ];*/
+	
+	this.init = function() {
+		
+		var args = ($localStorage.searchFilterArgs != undefined) ? $localStorage.searchFilterArgs : {};
+		_this.getActionNames(args);
+//		args['name'] = (_this.actionCommandList[0] != undefined) ?  _this.actionCommandList[0] : "NULL";
+//		_this.getCommandCountOfAction(args);		
+		
+	}
+	
+	/**
+	 * Pie chart
+	 */
+	
+	this.getCommandCountOfAction = function(args) {
+
+		apiService.getWithParams(apiUrl.GET_COMMAND_COUNT_OF_ACTION, args,
+		function(data, status) {
+			_this.selectedCommand = data;
+			_this.selectedCommand.label = args['name'];
+		});
+	}
+
+	$scope.$on('populateSearchResults', function(event, args) {
+
+		$localStorage.searchFilterArgs = args;
+		_this.getActionNames(args);
+	});
+
+	this.changeCommandSelection = function() {
+		var args = ($localStorage.searchFilterArgs != undefined) ? $localStorage.searchFilterArgs : {};
+		var selectBox = document.getElementById("actionEvent");
+		var selectedValue = selectBox.options[selectBox.selectedIndex];
+		//_this.selectedCommand = _this.actionCommandCountList[selectedValue.value];		
+		args['name'] = selectedValue.text;
+		_this.getCommandCountOfAction(args);
+	}
+	
+	this.getActionNames = function(args) {
+		apiService.getWithParams(apiUrl.GET_ACTION_NAMES, args,
+				function(data, status) {
+					_this.actionCommandList = data.names;
+				});
+	}
+	
+	this.init();
+
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+
+angular.module('cie').controller('ToolActionEventCtrl', ToolActionEventCtrl);

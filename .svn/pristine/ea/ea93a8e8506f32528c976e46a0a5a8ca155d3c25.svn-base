@@ -1,0 +1,236 @@
+/**
+ * Event Search controller
+ * 
+ */
+function EventSearchCtrl($scope, apiService, apiUrl, $anchorScroll, $location,
+		$localStorage, $modal, notify, $http, userDataService) {
+
+	var _this = this;
+
+	this.selected = {};
+	
+	this.username = userDataService.getUserName();
+	
+	this.filtername = "";
+	
+	this.totalFilterCount = 0;
+
+	this.eventSearch = function() {
+
+		// Create the http post request
+		// the data holds the keywords
+		// The request is a JSON request.
+		var args = {};
+		angular.copy(_this.selected, args);
+		args['fromDate'] = new Date(_this.fromDate).getTime();
+		args['toDate'] = new Date(_this.toDate).getTime();
+
+		$scope.$emit('populateSearchResults', args);
+
+	};
+
+	this.eventSearchClear = function() {
+
+		$localStorage.searchFilterArgs = {};
+		_this.init();
+		$scope.$emit('populateSearchResults', {});
+	};
+
+	this.eventSearchSave = function() {
+		var args = {};
+		
+		args['source']    = _this.selected['source']    || "all";
+		args['domainId']  = _this.selected['domainId']  || "all";
+		args['serverId']  = _this.selected['serverId']  || "all";
+		args['sessionId'] = _this.selected['sessionId'] || "all";
+		args['fromDate']  =  new Date(_this.fromDate).getTime() || "all";
+		args['toDate']    =  new Date(_this.toDate).getTime()	|| "all";
+		args['uName']     = _this.username;
+		args['filtername']  = _this.filtername || "filtername" + (_this.totalFilterCount + 1) ;
+		
+		_this.saveSearchFilter(args);
+		
+
+	};
+
+	this.getSavedFilters = function(args){
+		args['uName']  = _this.username;
+		args['limit']  = args['limit'] || 2; 
+		apiService.getWithParams(apiUrl.GET_SAVED_FILTERS, args, function(data,
+				status) {
+			_this.savedFilterList = data.result;
+			_this.totalFilterCount = data.totalFilterCount;
+		});
+		
+	}
+	
+	
+	this.saveSearchFilter = function(args) {
+		
+		apiService.post(apiUrl.SAVE_SEARCH_FILTER, args,
+		function(data, status) {
+			if (data.status == "Failed") {
+				notify({
+					message : 'Error :- '+ data.message,
+					classes : 'alert-danger',
+					templateUrl : 'views/common/notify.html'
+				});
+
+			} else {
+				notify({
+					message : 'Success :- '+ data.message,
+					classes : 'alert-success',
+					templateUrl : 'views/common/notify.html'
+				});
+				_this.getSavedFilters({});
+			}
+			_this.filtername = "";
+
+		});
+
+	}
+	this.init = function() {
+
+		var searchArgs = ($localStorage.searchFilterArgs != undefined) ? $localStorage.searchFilterArgs
+				: {};
+		_this.selected['sessionId'] = (searchArgs['sessionId'] != undefined ? searchArgs['sessionId']
+				: '');
+		_this.selected['serverId'] = (searchArgs['serverId'] != undefined ? searchArgs['serverId']
+				: '');
+		_this.selected['source'] = (searchArgs['source'] != undefined ? searchArgs['source']
+				: '');
+		_this.selected['domainId'] = (searchArgs['domainId'] != undefined ? searchArgs['domainId']
+				: '');
+
+		_this.fromDate = (searchArgs['fromDate'] != undefined ? searchArgs['fromDate']
+				: new Date());
+
+		_this.toDate = (searchArgs['toDate'] != undefined ? searchArgs['toDate']
+				: new Date());
+
+		_this.getSources();
+		_this.getDomains();
+		_this.getServers();
+		_this.getSessions();
+		_this.getSavedFilters({});
+
+	}
+	
+	/*
+	 * Get all Session Ids
+	 */
+
+	this.getSessions = function() {
+		var args = {};
+		args['source']   = _this.selected['source'];
+		args['domainId'] = _this.selected['domainId'];
+		args['serverId'] = _this.selected['serverId'];
+		apiService.getWithParams(apiUrl.GET_SESSIONS, args, function(data,
+				status) {
+			_this.eventSessionList = data.names;
+			
+			if(_this.selected['sessionId'] != "" && data.names.indexOf(_this.selected['sessionId']) == -1){
+				$localStorage.searchFilterArgs['sessionId'] = _this.selected['sessionId'] = "";
+				$scope.$emit('populateSearchResults', $localStorage.searchFilterArgs);
+			}
+
+		});
+	}
+
+	this.hasSessionChanged = function() {
+
+		$localStorage.searchFilterArgs['sessionId'] = _this.selected['sessionId'];
+		$scope.$emit('populateSearchResults', $localStorage.searchFilterArgs);
+		
+	}
+
+	/*
+	 * Get all Server Ids
+	 */
+
+	this.getServers = function() {
+		var args = {};
+		args['source']   = _this.selected['source'];		
+		apiService.getWithParams(apiUrl.GET_SERVERS, args, function(data,
+				status) {
+			_this.eventServerList = data.names;
+			if(_this.selected['serverId'] != "" && data.names.indexOf(_this.selected['serverId']) == -1){
+				$localStorage.searchFilterArgs['serverId'] = _this.selected['serverId'] = "";
+				$scope.$emit('populateSearchResults', $localStorage.searchFilterArgs);
+			}
+		});
+	}
+
+	this.hasServerChanged = function() {
+		
+		_this.getDomains();
+		_this.getSessions();
+		$localStorage.searchFilterArgs['serverId'] = _this.selected['serverId'];
+		$scope.$emit('populateSearchResults', $localStorage.searchFilterArgs);
+		
+	}
+
+	/*
+	 * Get all Domain/User Ids
+	 */
+
+	this.getDomains = function() {
+		var args = {};
+		args['source']   = _this.selected['source'];
+		args['serverId'] = _this.selected['serverId'];
+		apiService.getWithParams(apiUrl.GET_DOMAINS, args, function(data,
+				status) {
+			_this.eventDomainList = data.names;
+			if(_this.selected['domainId'] != "" && data.names.indexOf(_this.selected['domainId']) == -1){
+				$localStorage.searchFilterArgs['domainId'] = _this.selected['domainId'] = "";
+				$scope.$emit('populateSearchResults', $localStorage.searchFilterArgs);
+			}
+			
+		});
+	}
+
+	this.hasDomainChanged = function() {
+
+		_this.getSessions();
+		$localStorage.searchFilterArgs['domainId'] = _this.selected['domainId'];
+		$scope.$emit('populateSearchResults', $localStorage.searchFilterArgs);
+		
+	}
+
+	/*
+	 * Get all Domain Ids
+	 */
+
+	this.getSources = function() {
+		
+		apiService.getWithParams(apiUrl.GET_SOURCES, {}, function(data,
+				status) {
+			_this.eventSourceList = data.names;
+		});
+	}
+
+	this.hasSourceChanged = function() {
+
+		_this.getServers();
+		_this.getDomains();
+		_this.getSessions();
+		$localStorage.searchFilterArgs['source'] = _this.selected['source'];
+		$scope.$emit('populateSearchResults', $localStorage.searchFilterArgs);
+	}
+	
+	this.hasDateChanged = function() {
+
+		$localStorage.searchFilterArgs['fromDate'] = new Date(_this.fromDate).getTime();
+		$localStorage.searchFilterArgs['toDate'] = new Date(_this.toDate).getTime();
+		$scope.$emit('populateSearchResults', $localStorage.searchFilterArgs);
+	}
+	
+	this.init();
+
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+angular.module('cie').controller('EventSearchCtrl', EventSearchCtrl)

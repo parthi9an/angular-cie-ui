@@ -1,0 +1,144 @@
+<!-- Wrapper-->
+<div id="wrapper" ng-controller="MainCtrl as ctrl">
+
+	<!-- Navigation -->
+	<div ng-include="'views/common/navigation.html'"></div>
+
+	<!-- Page wraper -->
+	<!-- ng-class with current state name give you the ability to extended customization your view -->
+	<div id="page-wrapper" class="gray-bg {{$state.current.name}}">
+
+		<!-- Page wrapper -->
+		<div ng-include="'views/common/topnavbar.html'"></div>
+
+		<!-- Main view  -->
+		<div class="wrapper wrapper-content"
+			ng-controller="ToolEventCtrl as eCtrl">
+			<div ng-include src="'views/widget/event_search.html'"></div>
+
+			<div class="row">
+				<a href="#/tool_action">
+					<div class="col-lg-2">
+						<div class="ibox">
+							<div class="ibox-content">
+								<h5>Action</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('action')}}</h1>
+								<small>Total Action</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/tool_keyb">
+					<div class="col-lg-2">
+						<div class="ibox">
+							<div class="ibox-content">
+								<h5>Keyboard</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('keyboard')}}</h1>
+								<small>Total Keyboard</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/inprogress">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Domain</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('domain')}}</h1>
+								<small>Total Domain</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/tool_view">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+
+							<div class="ibox-content">
+								<h5>View</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('view')}}</h1>
+								<small>Total View</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/inprogress">
+					<div class="col-lg-3">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Field modification</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('field_mod')}}</h1>
+								<small>Total</small>
+							</div>
+						</div>
+					</div>
+				</a>
+
+			</div>
+			<div class="row">
+				<a href="#/inprogress">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Configuration</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('config')}}</h1>
+								<small>Total</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/inprogress">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Window</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('window')}}</h1>
+								<small>Total</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/inprogress">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Potential</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('potential')}}</h1>
+								<small>Total</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/tool_error">
+					<div class="col-lg-2">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Error</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('error')}}</h1>
+								<small>Total Error</small>
+							</div>
+						</div>
+					</div>
+				</a> <a href="#/inprogress">
+					<div class="col-lg-3">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<h5>Environment Changes</h5>
+								<h1 class="no-margins">{{eCtrl.getCount('env')}}</h1>
+								<small>Total</small>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="wrapper wrapper-content animated fadeInRight">
+
+				<div ng-include src="'views/widget/table_event_widget.html'"></div>
+
+			</div>
+			<div class="row">
+				<div class="col-lg-11">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>Frequent Event Patterns</h5>
+							<br />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

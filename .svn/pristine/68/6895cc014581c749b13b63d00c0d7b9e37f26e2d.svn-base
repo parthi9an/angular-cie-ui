@@ -1,0 +1,57 @@
+/**
+ * Tool View Event Controller 
+ */
+
+function ToolViewEventCtrl(conf, apiUrl, apiService, $scope, $http,
+		$localStorage, $modal, $compile) {
+
+	var _this = this;
+	
+	this.init = function() {
+
+		var args = ($localStorage.searchFilterArgs != undefined) ? $localStorage.searchFilterArgs
+				: {};
+		_this.getViewCount(args);	
+		_this.getViewActivity(args);
+	}
+	
+	$scope.$on('populateSearch', function(event) {
+
+		var args = $localStorage.searchFilterArgs;
+		_this.getViewCount(args);
+		_this.getViewActivity(args);
+	});
+
+	/* Get counts of what views/dialogs are used 
+	 * Pie chart
+	 */
+	
+	this.getViewCount = function(args) {
+		apiService.getWithParams(apiUrl.GET_VIEW_COUNT, args,
+				function(data, status) {
+					_this.viewData = data;
+				});
+	}
+	
+	/*
+	 * Get total and average duration of activity within views/dialog 
+	 * Pie chart
+	 */
+	
+	this.getViewActivity = function(args){
+		apiService.getWithParams(apiUrl.GET_VIEW_ACTIVITY, args,
+				function(data, status) {
+					_this.viewGraphData = data;
+				});		
+	}
+	
+	this.init();
+	
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+
+angular.module('cie').controller('ToolViewEventCtrl', ToolViewEventCtrl);

@@ -1,0 +1,98 @@
+/*
+ * Tool Action Event Controller 
+ */
+
+function ToolActionEventCtrl(conf, apiUrl, apiService, ChartJs, $scope, $http,
+		$localStorage, $modal, $compile) {
+
+	var _this = this;
+
+	this.showGraph = true;
+	this.showCmdGraph = true;
+
+	var pieAction, pieActionCmd;
+
+	this.init = function() {
+
+		var args = ($localStorage.searchFilterArgs != undefined) ? $localStorage.searchFilterArgs
+				: {};
+		_this.getActionNames(args);
+		_this.getCountOfActionEvent(args);
+
+	}
+
+	/*
+	 * Get count of action type commands Pie chart
+	 */
+
+	this.getCommandCountOfAction = function(args) {
+
+		apiService.getWithParams(apiUrl.GET_COMMAND_COUNT_OF_ACTION, args,
+				function(data, status) {
+					if (data.name.length == 0) {
+						_this.showCmdGraph = false;
+					} else {
+						_this.showCmdGraph = true;
+					}
+					_this.selectedCommand = data;
+				});
+	}
+
+	/*
+	 * Get count of all action event type Pie chart
+	 */
+
+	this.getCountOfActionEvent = function(args) {
+
+		apiService.getWithParams(apiUrl.GET_COUNT_OF_ACTION_KEY, args,
+				function(data, status) {
+					if (data.name.length == 0) {
+						_this.showGraph = false;
+					} else {
+						_this.showGraph = true;
+					}
+					_this.actionData = data;
+
+				});
+	}
+
+	$scope.$on('populateSearch', function(event) {
+
+		var args = $localStorage.searchFilterArgs;
+		_this.getActionNames(args);
+		_this.selectedCommand = {"name":[],"count":[]};
+		_this.getCountOfActionEvent(args);
+	});
+
+	this.changeCommandSelection = function(item) {
+		if (item != null) {
+			var args = {};
+			if ($localStorage.searchFilterArgs != undefined) {
+				angular.copy($localStorage.searchFilterArgs, args);
+			}
+			args['name'] = item;
+			_this.getCommandCountOfAction(args);
+		}
+
+	}
+
+	/*
+	 * Get action event type names
+	 */
+	this.getActionNames = function(args) {
+		apiService.getWithParams(apiUrl.GET_ACTION_NAMES, args, function(data,
+				status) {
+			_this.actionCommandList = data.names;
+		});
+	}
+
+	this.init();
+
+}
+
+/**
+ * 
+ * Pass all functions into module
+ */
+
+angular.module('cie').controller('ToolActionEventCtrl', ToolActionEventCtrl);

@@ -1,0 +1,60 @@
+
+<!-- Wrapper-->
+<div id="wrapper" ng-controller="ToolWindowEventCtrl as wCtrl">
+
+	<!-- Navigation -->
+	<div ng-include="'views/common/navigation.html'"></div>
+
+	<!-- Page wraper -->
+	<!-- ng-class with current state name give you the ability to extended customization your view -->
+	<div id="page-wrapper" class="gray-bg {{$state.current.name}}">
+
+		<!-- Page wrapper -->
+		<div ng-include="'views/common/topnavbar.html'"></div>
+
+		<!-- Main view  -->
+		<div class="row wrapper border-bottom white-bg page-heading">
+			<div class="col-lg-10">
+
+				<ol class="breadcrumb" style="padding-top: 5px;">
+					<li><a href="index.html">Home</a></li>
+					<li class="active"><strong>Tool Window Event</strong></li>
+				</ol>
+			</div>
+			<div class="col-lg-2"></div>
+		</div>
+
+		<div class="wrapper wrapper-content animated fadeInRight">
+
+			<div ng-include src="'views/widget/event_search.html'"></div>
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>Summary of Moved/Resized Window</h5>
+							<br />
+						</div>
+						<div class="ibox-content">
+							<div class="animated fadeInDown" ng-show="!wCtrl.showWndGraph"
+								no-data-graph></div>
+							<canvas id="pie" class="chart chart-pie"
+								ng-show="wCtrl.showWndGraph" chart-data="wCtrl.windowData.count"
+								chart-labels="wCtrl.windowData.name" chart-legend="true"> 
+									</canvas>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- Footer -->
+		<div ng-include="'views/common/footer.html'"></div>
+
+	</div>
+	<!-- End page wrapper-->
+
+</div>
+<!-- End wrapper-->
