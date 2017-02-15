@@ -1,0 +1,21 @@
+{
+  "name": "cie-ui-main",
+  "version": "1.0.0",
+  "description": "angualar-cie-ui",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parthi9an/angular-cie-ui.git"
+  },
+  "author": "Parthipan.E",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/parthi9an/angular-cie-ui/issues"
+  },
+  "homepage": "https://github.com/parthi9an/angular-cie-ui#readme"
+}
